@@ -5,7 +5,7 @@
 FROM centos:7
 
 ENV SONATYPE_WORK /sonatype-work
-ENV NEXUS_VERSION 3.5.0-02
+ENV NEXUS_VERSION 2.14.5-02
 ENV NEXUS_HOME /opt/sonatype/nexus/
 
 RUN INSTALL_PKGS="java-1.8.0-openjdk.x86_64" && \
