@@ -26,7 +26,8 @@ services:
 
   db:
     image: postgres
-    links: sonar:sonar
+    links:
+      - sonar:sonar
     environment:
      - POSTGRES_USER=sonar
      - POSTGRES_PASSWORD=sonar
