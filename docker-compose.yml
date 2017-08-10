@@ -24,7 +24,6 @@ services:
     - /opt/jenkins/:/var/lib/jenkins/
   depends_on:
     - nexus
-    - gitlab
     - sonar
   environment:
     - NEXUS_PORT=8081
