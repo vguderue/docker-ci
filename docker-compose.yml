@@ -1,64 +1,81 @@
 version: '2'
 
+networks:
+  prodnetwork:
+    driver: bridge
+
 services:
-  nexus:
-    build: ./nexus
-    ports:
-      - "18081:8081"
+ nexus:
+  build: ./nexus
+  ports:
+    - "18081:8081"
+  networks:
+    - prodnetwork
 
-  jenkins:
-    build: ./jenkins
-    ports:
-      - "18080:8080"
-    links:
-      - nexus:nexus
-      - sonar:sonar
-      - selhub:hub
+ jenkins:
+  build: ./jenkins
+  ports:
+    - "18080:8080"
+  networks:
+    - prodnetwork
+  volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+    - /usr/local/bin/docker:/usr/bin/docker
+    - /opt/jenkins/:/var/lib/jenkins/
+  depends_on:
+    - nexus
+    - sonar
+  environment:
+    - NEXUS_PORT=8081
+    - SONAR_PORT=9000
+    - SONAR_DB_PORT=5432
 
-  sonar:
-    build: ./sonar
-    ports:
-     - "19000:9000"
-     - "5432:5432"
-    environment:
-     - SONARQUBE_JDBC_URL=jdbc:postgresql://localhost:5432/sonar
+ sonar:
+  build: ./sonar
+  ports:
+   - "19000:9000"
+   - "5432:5432"
+  networks:
+    - prodnetwork
+  depends_on:
+    - sonardb
+  environment:
+   - SONARQUBE_JDBC_URL=jdbc:postgresql://sonardb:5432/sonar
+   - SONARQUBE_JDBC_USERNAME=sonar
+   - SONARQUBE_JDBC_PASSWORD=sonar
+ sonardb:
+  networks:
+    - prodnetwork
+  image: postgres
+  environment:
+   - POSTGRES_USER=sonar
+   - POSTGRES_PASSWORD=sonar
+  volumes:
+    - /opt/postgres/data:/var/lib/postgresql/data
 
-  db:
-    image: postgres
-    links:
-      - sonar:sonar
-    environment:
-     - POSTGRES_USER=sonar
-     - POSTGRES_PASSWORD=sonar
+ seleniumhub:
+  image: selenium/hub
+  ports:
+    - "4444:4444"
+  networks:
+    - prodnetwork
+ firefox:
+  image: selenium/node-firefox
+  depends_on:
+    - seleniumhub
+  environment:
+    - HUB_PORT_4444_TCP_ADDR=seleniumhub
+  networks:
+    - prodnetwork
+ chrome:
+  image: selenium/node-chrome
+  depends_on:
+    - seleniumhub
+  environment:
+    - HUB_PORT_4444_TCP_ADDR=seleniumhub
+  networks:
+    - prodnetwork
 
-  selhub:
-    image: selenium/hub
-    ports:
-      - 4444:4444
-
-  nodeff:
-    image: selenium/node-firefox-debug
-    ports:
-      - 5900
-    links:
-      - selhub:hub
-
-  nodechrome:
-    image: selenium/node-chrome-debug
-    ports:
-      - 5900
-    links:
-      - selhub:hub
-
-  postgresql:
-    image: sameersbn/postgresql:9.4-3
-    environment:
-      - DB_USER=gitlab
-      - DB_PASS=password
-      - DB_NAME=gitlabhq_production
-    volumes:
-      - /srv/docker/gitlab/postgresql:/var/lib/postgresql
-      
   redis:
     image: sameersbn/redis:latest
     volumes:
