@@ -26,18 +26,6 @@ EXPOSE 9000
 # H2 Database port
 EXPOSE 9092
 
-# Install packages necessary
-RUN yum -y install unzip && yum clean all
-
-# Add SonarQube binaries from Nexus Repository
-ADD https://sonarsource.bintray.com/Distribution/sonarqube/sonarqube-${SONAR_VERSION}.zip $SONARQUBE_HOME/sonarqube-${SONAR_VERSION}.zip
-
-# Unpack SonarQube Zip
-RUN set -x \
-	&& unzip $SONARQUBE_HOME/sonarqube-${SONAR_VERSION}.zip \
-	&& mv sonarqube-${SONAR_VERSION}/* $SONARQUBE_HOME \
-	&& rm $SONARQUBE_HOME/sonarqube-${SONAR_VERSION}.zip
-
 # Add plugins
 RUN mkdir -p $SONARQUBE_HOME/extensions/plugins/
 ADD http://central.maven.org/maven2/org/sonarsource/java/sonar-java-plugin/${SONAR_JAVA_PLUGIN}/sonar-java-plugin-${SONAR_JAVA_PLUGIN}.jar $SONARQUBE_HOME/extensions/plugins/sonar-java-plugin-${SONAR_JAVA_PLUGIN}.jar
