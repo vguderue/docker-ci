@@ -27,7 +27,7 @@ services:
     - SONAR_DB_PORT=5432
 
  sonar:
-  build: sonarqube
+  image: sonarqube
   ports:
    - "9000:9000"
    - "9092:9092"
