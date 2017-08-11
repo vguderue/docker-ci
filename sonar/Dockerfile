@@ -15,10 +15,8 @@ ENV SONAR_WEB_PLUGIN 2.4
 ENV SONAR_SCM_GIT_PLUGIN 1.0
 
 RUN INSTALL_PKGS="java-1.8.0-openjdk.x86_64" && \
-    yum -y --setopt=tsflags=nodocs install $INSTALL_PKGS && \
-    rpm -V $INSTALL_PKGS && \
-    yum clean all  && \
-    localedef -f UTF-8 -i en_US en_US.UTF-8
+    apt-get -y --setopt=tsflags=nodocs install $INSTALL_PKGS && \
+    rpm -V $INSTALL_PKGS &&
 
 # Http port
 EXPOSE 9000
