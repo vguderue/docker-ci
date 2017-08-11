@@ -1,0 +1,29 @@
+version: '2'
+
+networks:
+  prodnetwork:
+    driver: bridge
+
+services:
+
+ sonar:
+ image: sonarqube
+ ports:
+  - "19000:9000"
+  - "5432:5432"
+ networks:
+   - prodnetwork
+ depends_on:
+   - sonardb
+ environment:
+  - SONARQUBE_JDBC_URL=jdbc:postgresql://db:5432/sonar
+
+ sonardb:
+ image: postgres
+ networks:
+   - prodnetwork
+ environment:
+   - POSTGRES_USER=sonar
+   - POSTGRES_PASSWORD=sonar
+ volumes:
+   - /opt/postgres/data:/var/lib/postgresql/data
