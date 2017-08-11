@@ -34,7 +34,7 @@ services:
   networks:
     - prodnetwork
   depends_on:
-    - sonardb  
+    - sonardb
   environment:
    - SONARQUBE_JDBC_URL=jdbc:postgresql://db:5432/sonar
 
@@ -46,5 +46,4 @@ services:
     - POSTGRES_USER=sonar
     - POSTGRES_PASSWORD=sonar
   volumes:
-    - postgresql:/var/lib/postgresql
-    - postgresql_data:/var/lib/postgresql/data
+    - /opt/postgres/data:/var/lib/postgresql/data
