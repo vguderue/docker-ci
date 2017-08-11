@@ -24,7 +24,7 @@ services:
   environment:
     - NEXUS_PORT=8081
     - SONAR_PORT=9000
-    - SONAR_DB_PORT=9092
+    - SONAR_DB_PORT=5432
 
  sonar:
   image: sonarqube
