@@ -2,11 +2,16 @@
 # Creates a docker container with SonarQube, incl. several plugins
 #
 
-FROM sonarqube
+FROM centos:7
+
+MAINTAINER Marcel Birkner <marcel.birkner@codecentric.de>
+
+ENV JAVA_OPTS "$JAVA_OPTS -Duser.country=DE -Duser.language=de -Duser.timezone=Europe/Berlin"
 
 # Set the JAVA_HOME variable to make it clear where Java is located
 ENV JAVA_HOME /usr/lib/jvm/java-1.8.0
 
+ENV SONAR_VERSION 5.6.3
 ENV SONARQUBE_HOME /opt/sonarqube
 
 # Plugin Versions
@@ -15,14 +20,28 @@ ENV SONAR_WEB_PLUGIN 2.4
 ENV SONAR_SCM_GIT_PLUGIN 1.0
 
 RUN INSTALL_PKGS="java-1.8.0-openjdk.x86_64" && \
-    apt-get -y --setopt=tsflags=nodocs install $INSTALL_PKGS && \
-    rpm -V $INSTALL_PKGS &&
+    yum -y --setopt=tsflags=nodocs install $INSTALL_PKGS && \
+    rpm -V $INSTALL_PKGS && \
+    yum clean all  && \
+    localedef -f UTF-8 -i en_US en_US.UTF-8
 
 # Http port
 EXPOSE 9000
 
 # H2 Database port
 EXPOSE 9092
+
+# Install packages necessary
+RUN yum -y install unzip && yum clean all
+
+# Add SonarQube binaries from Nexus Repository
+ADD https://sonarsource.bintray.com/Distribution/sonarqube/sonarqube-${SONAR_VERSION}.zip $SONARQUBE_HOME/sonarqube-${SONAR_VERSION}.zip
+
+# Unpack SonarQube Zip
+RUN set -x \
+	&& unzip $SONARQUBE_HOME/sonarqube-${SONAR_VERSION}.zip \
+	&& mv sonarqube-${SONAR_VERSION}/* $SONARQUBE_HOME \
+	&& rm $SONARQUBE_HOME/sonarqube-${SONAR_VERSION}.zip
 
 # Add plugins
 RUN mkdir -p $SONARQUBE_HOME/extensions/plugins/
