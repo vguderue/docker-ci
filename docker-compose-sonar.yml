@@ -28,7 +28,7 @@ services:
     - POSTGRES_USER=sonar
     - POSTGRES_PASSWORD=sonar
   volumes:
-    - /opt/postgres/data:/var/lib/postgresql/data
+    - /opt/postgres/data
 
 networks:
   prodnetwork:
