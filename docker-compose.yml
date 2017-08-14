@@ -6,14 +6,14 @@ networks:
 
 services:
  nexus:
-  build: sonatype/nexus
+  image: sonatype/nexus
   ports:
     - "18081:8081"
   networks:
     - prodnetwork
 
  jenkins:
-  build: jenkins
+  image: jenkins
   ports:
     - "18080:8080"
   networks:
@@ -31,7 +31,7 @@ services:
     - SONAR_DB_PORT=5432
 
  sonar:
-  build: sonarqube
+  image: sonarqube
   ports:
     - "19000:9000"
     - "5432:5432"
