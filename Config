@@ -1,0 +1,26 @@
+DEVOPS
+
+// nubo EW
+http://172.27.41.229:8080/ords/f?p=100:101:13863725598141
+admin/a
+
+GitHub personal token cf6a95dfc5c1aeea7fded69c6cbe4d0cf3b1d30c
+
+GitHub client id 75fe1374eaf82abb2388
+       client secret 55df1a1aacf6ab752aa65a8c60f437e065c9fbb1
+
+Sonar 4d41bb757531c51e52ff0fa3f9512cac59ffa053
+
+sudo cp /opt/nexus/bin/nexus /etc/init.d/
+
+sudo vi /opt/nexus/conf/nexus.properties
+
+firewall-cmd --zone=public --permanent --add-port=18081/tcp
+
+chown -R nexus:nexus /opt/sonatype-work/
+
+java -jar selenium-server-standalone-3.5.2.jar -role hub
+
+java -jar selenium-server-standalone-3.5.2.jar -role node  -hub http://localhost:4444/grid/register
+
+sudo ln -s apache-maven-3.5.0 maven

@@ -1,0 +1,22 @@
+docker ps
+
+docker-compose up
+
+docker images | docker rmi -f
+
+docker rm -f $(docker ps -a -q)
+docker rmi -f $(docker images -q)
+
+docker-compose -f docker-compose-selenium.yml up
+
+docker-compose -f docker-compose-sonar.yml up
+
+docker exec -it <mycontainer> bash
+
+
+
+virtualenv --system-site-packages /Users/Victor_Gude/tensorflow
+
+source ~/tensorflow/bin/activate
+
+deactivate
